@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
 
     public void buscarChamados(View view) {
         String fila = txtFila.getText().toString();
-        new DownloadJsonChamados().execute("http://192.168.42.171:8080/arqsw_sdesk_a1/rest/chamados");
+        new DownloadJsonChamados().execute("http://10.71.250.244:8080/arqsw_sdesk_a1/rest/chamados");
     }
 
     private class DownloadJsonChamados extends AsyncTask<String, Void, ArrayList<Chamado>>{
