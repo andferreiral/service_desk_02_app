@@ -3,11 +3,15 @@ package br.usjt.deswebmob.servicedesk.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import br.usjt.deswebmob.servicedesk.model.Fila;
+
 /**
- * Created by Andrey on 21/03/2018.
+ * Created by andrey on 21/03/18.
  */
 
 public class Chamado implements Serializable{
+    public final static String DATE_PATTERN = "dd-MM-yyyy";
+
     private int numero;
     private Date dataAbertura, dataFechamento;
     private String status, descricao;

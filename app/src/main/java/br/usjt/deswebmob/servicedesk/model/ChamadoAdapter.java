@@ -8,21 +8,29 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import br.usjt.deswebmob.servicedesk.R;
+import br.usjt.deswebmob.servicedesk.controller.MainActivity;
 
 /**
- * Created by Andrey on 21/03/2018.
+ * Created by andrey on 21/03/18.
  */
 
 public class ChamadoAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<Chamado> chamados;
+    private ArrayList<Fila> filas;
 
     public ChamadoAdapter(Context context, ArrayList<Chamado> chamados) {
         this.context = context;
         this.chamados = chamados;
+        this.filas = MainActivity._filas;
     }
 
     @Override
@@ -49,10 +57,10 @@ public class ChamadoAdapter extends BaseAdapter {
                     context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.linha_chamado, parent, false);
 
-            ImageView imagem = view.findViewById(R.id.imagem_fila);
-            TextView numero = view.findViewById(R.id.numero_status_chamado);
-            TextView datas = view.findViewById(R.id.abertura_fechamento_chamado);
-            TextView descricao = view.findViewById(R.id.descricao_chamado);
+            ImageView imagem = (ImageView) view.findViewById(R.id.imagem_fila);
+            TextView numero = (TextView) view.findViewById(R.id.numero_status_chamado);
+            TextView datas = (TextView) view.findViewById(R.id.abertura_fechamento_chamado);
+            TextView descricao = (TextView) view.findViewById(R.id.descricao_chamado);
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.setNumero(numero);
             viewHolder.setDatas(datas);
@@ -65,11 +73,16 @@ public class ChamadoAdapter extends BaseAdapter {
 
         ViewHolder viewHolder = (ViewHolder)view.getTag();
 
-        viewHolder.getImagem().setImageDrawable(Util.getDrawableDinamic(context, chamado.getFila().getFigura()));
-
+        try {
+            viewHolder.getImagem().setImageBitmap(filas.get(Fila.getFila(filas, chamado.getFila().getId())).getImagem());
+        } catch(Exception e){
+            viewHolder.getImagem().setImageDrawable(context.getDrawable(R.drawable.ic_not_found));
+        }
+        DateFormat formatter = new SimpleDateFormat(Chamado.DATE_PATTERN);
         viewHolder.getNumero().setText(String.format("numero: %d - status:%s", chamado.getNumero(), chamado.getStatus()));
-        viewHolder.getDatas().setText(String.format("aberture: %tD - fechamento: %tD",
-                chamado.getDataAbertura(), chamado.getDataFechamento()));
+        viewHolder.getDatas().setText(String.format("abertura: %s - fechamento: %s",
+                formatter.format(chamado.getDataAbertura()),
+                chamado.getDataFechamento() == null?" ":formatter.format(chamado.getDataFechamento())));
         viewHolder.getDescricao().setText(chamado.getDescricao());
 
         return view;

@@ -15,6 +15,9 @@ import br.usjt.deswebmob.servicedesk.model.Chamado;
 import br.usjt.deswebmob.servicedesk.model.ChamadoAdapter;
 import br.usjt.deswebmob.servicedesk.model.ChamadoNetwork;
 
+/**
+ * Created by andrey on 21/03/18.
+ */
 public class ListarChamadosActivity extends Activity {
 
     public static final String CHAMADO = "br.usjt.deswebmob.servicedesk.chamado";

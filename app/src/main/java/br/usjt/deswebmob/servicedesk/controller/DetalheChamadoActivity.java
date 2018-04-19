@@ -7,9 +7,16 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import br.usjt.deswebmob.servicedesk.R;
 import br.usjt.deswebmob.servicedesk.model.Chamado;
+import br.usjt.deswebmob.servicedesk.model.Fila;
 import br.usjt.deswebmob.servicedesk.model.Util;
+/**
+ * Created by andrey on 21/03/18.
+ */
 
 public class DetalheChamadoActivity extends Activity {
 
@@ -20,19 +27,24 @@ public class DetalheChamadoActivity extends Activity {
         Intent intent = getIntent();
         Chamado chamado = (Chamado)intent.getSerializableExtra(ListarChamadosActivity.CHAMADO);
         ImageView foto = (ImageView) findViewById(R.id.foto_fila_detalhe);
-        Drawable drawable = Util.getDrawableDinamic(this, chamado.getFila().getFigura());
-        foto.setImageDrawable(drawable);
+        try {
+            foto.setImageBitmap(MainActivity._filas.get(Fila.getFila(MainActivity._filas,
+                    chamado.getFila().getId())).getImagem());
+        } catch (Exception e){
+            foto.setImageDrawable(getDrawable(R.drawable.ic_not_found));
+        }
         TextView fila = (TextView)findViewById(R.id.valor_fila);
         fila.setText(chamado.getFila().getNome());
         TextView numero = (TextView)findViewById(R.id.valor_numero);
         numero.setText(""+chamado.getNumero());
         TextView status = (TextView)findViewById(R.id.valor_status);
         status.setText(""+chamado.getStatus());
+        DateFormat formatter = new SimpleDateFormat(Chamado.DATE_PATTERN);
         TextView abertura = (TextView)findViewById(R.id.valor_abertura);
-        abertura.setText(String.format("%tD",chamado.getDataAbertura()));
+        abertura.setText(formatter.format(chamado.getDataAbertura()));
         TextView fechamento = (TextView)findViewById(R.id.valor_fechamento);
-        String strFechamento = String.format("%tD",chamado.getDataFechamento());
-        fechamento.setText(strFechamento.equals("null")?" ":strFechamento);
+        fechamento.setText(chamado.getDataFechamento() == null?" ":
+                formatter.format(chamado.getDataFechamento()));
         TextView descricao = (TextView)findViewById(R.id.valor_descricao);
         descricao.setText(""+chamado.getDescricao());
     }
